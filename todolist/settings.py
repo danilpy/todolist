@@ -61,13 +61,15 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todolist',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'NAME': env('NAME').strip().rstrip(','),
+        'USER': env('USER').strip().rstrip(','),
+        'PASSWORD': env('PASSWORD').strip().rstrip(','),
+        'HOST': env('HOST').strip().rstrip(','),
         'PORT': '5432',
     }
 }
+
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -99,3 +101,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
+
+
+print(f"USER: '{env('USER')}'")
+print(f"PASSWORD: '{env('PASSWORD')}'")
