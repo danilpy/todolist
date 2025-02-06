@@ -1,17 +1,15 @@
-import environ
-import os
 from pathlib import Path
-
-env = environ.Env(DEBUG=(bool, False))
-
+from envparse import env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+ENV_FILE_PATH = BASE_DIR.joinpath('.env')
+if ENV_FILE_PATH.is_file():
+    env.read_envfile(path=ENV_FILE_PATH)
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY')
 
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -57,19 +55,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'todolist.wsgi.application'
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('NAME').strip().rstrip(','),
-        'USER': env('USER').strip().rstrip(','),
-        'PASSWORD': env('PASSWORD').strip().rstrip(','),
-        'HOST': env('HOST').strip().rstrip(','),
+        'NAME': env.str('NAME'),
+        'USER': env.str('USER'),
+        'PASSWORD': env.str('PASSWORD'),
+        'HOST': env.str('HOST', default='localhost'),
         'PORT': '5432',
     }
 }
-
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -101,7 +96,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
-
-
-print(f"USER: '{env('USER')}'")
-print(f"PASSWORD: '{env('PASSWORD')}'")
